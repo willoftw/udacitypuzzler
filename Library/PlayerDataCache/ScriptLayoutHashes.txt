@@ -14,7 +14,9 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 5667fb372c2b292ccdec2a31aaac98fa UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 c24a21b131bfa67be1162db2cba4b52b UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 90b96b2839cd8159f80ebdc119f2f187 Assembly-CSharp.dll:.PagedScrollBar
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:.SampleInfo
 da1c580343244172d67fb46650bbc762 Assembly-CSharp.dll:.ScaleScrollEffect
+609883ba9b3462e00c79080cdb51d119 Assembly-CSharp-firstpass.dll:.iTween
 88aa8214ed1d10780335e500d1da4b19 Assembly-CSharp.dll:.GvrVideoPlayerTexture
 5e108c986d8d2bd9798f27a3e17126a7 Assembly-CSharp.dll:.TabGroup
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
@@ -124,6 +126,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 c577e3c81322be1e48b1b04604ff2dbf Assembly-CSharp.dll:.JumpToPage
 5adc88bf7d1c618314bc1a0f0b3d6c47 Assembly-CSharp.dll:.GvrAudioSoundfield
 bb0ad8cb9cb04ab265277fa3ffe5f4ff Assembly-CSharp.dll:GVR.Events.ToggleAction
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:.MoveSample
 3a18cfdbb6cebc3c35f5817a12a10ece Assembly-CSharp.dll:GVR.Events.PositionSwapper
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -168,6 +171,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:.RotateSample
 2124af75d6b3afb90d3c8471b98e9f78 Assembly-CSharp.dll:.GvrFPS
 18b818a5eacfdcbea09d5a054be7238a Assembly-CSharp.dll:.GvrReticlePointer
 4b8ea17c4350779db30d026c2281dfcb Assembly-CSharp.dll:.PooledPageProvider
@@ -189,6 +193,6 @@ c5839a4d51b9b5220e5cc04a930d6b3f Assembly-CSharp.dll:.UIFadeTransition
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameObjectPoolController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Gvr.Internal.EmulatorClientSocket
 e399fc54e753911801f12ac57c8fc414 Assembly-CSharp.dll:.GVRDemoManager
-512f1b632245402685a4bdb5b61bbeac Assembly-CSharp.dll:.GameLogic
+3ab483c5eaeef6ccf2ee4980c5650049 Assembly-CSharp.dll:.GameLogic
 f1dced04f168103741226c31e59bf1c5 Assembly-CSharp.dll:.Tab
 d885ad79a6ef5bfe2ce10637aac0b8a0 Assembly-CSharp.dll:GVRSample.AutoPlayVideo

@@ -27,7 +27,9 @@ public class GameLogic : MonoBehaviour {
 			iTween.Hash (
 				"position", entryPoint.transform.position, 
 				"time", 2, 
-				"easetype", "linear"
+				"easetype", "linear",
+				"onComplete" ,"onComplete",
+				"oncompletetarget", GameObject.Find("GameLogic")
 			)
 		);
 //		iTween.MoveTo (player, 
@@ -38,6 +40,16 @@ public class GameLogic : MonoBehaviour {
 //			)
 //		);
 
+	}
+
+	public void onComplete() { //Reset the puzzle sequence
+				iTween.MoveTo (player, 
+					iTween.Hash (
+						"position", playPoint.transform.position, 
+						"time", 2, 
+						"easetype", "linear"
+					)
+				);
 	}
 
 	public void resetPuzzle() { //Reset the puzzle sequence
