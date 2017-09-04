@@ -18,7 +18,7 @@ public class GameLogic : MonoBehaviour {
 	public bool playerWon = false;
 
 	private int currentSolveIndex = 0; //Temporary variable for storing the index that the player is solving for in the pattern.
-
+	public GameObject failAudioHolder;
 
 	// Use this for initialization
 	void Start () {
@@ -35,6 +35,7 @@ public class GameLogic : MonoBehaviour {
 	public void playerSelection(GameObject sphere) {
 		if(playerWon != true) { //If the player hasn't won yet
 			int selectedIndex=0;
+			Debug.Log (sphere.ToString());
 			//Get the index of the selected object
 			for (int i = 0; i < puzzleSpheres.Length; i++) { //Go through the puzzlespheres array
 				if(puzzleSpheres[i] == sphere) { //If the object we have matches this index, we're good
@@ -142,7 +143,7 @@ public class GameLogic : MonoBehaviour {
 
 	public void puzzleFailure() { //Do this when the player gets it wrong
 		Debug.Log("You've Failed, Resetting puzzle");
-
+		failAudioHolder.GetComponent<GvrAudioSource>().Play();
 		currentSolveIndex = 0;
 
 		startPuzzle ();
