@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameLogic : MonoBehaviour {
 
+
 	public GameObject player;
 	public GameObject eventSystem;
 	public GameObject startUI, restartUI;
@@ -61,11 +62,9 @@ public class GameLogic : MonoBehaviour {
 	}
 
 
+
 	public void startPuzzle() { //Begin the puzzle sequence
-		//Generate a random number one through five, save it in an array.  Do this n times.
-		//Step through the array for displaying the puzzle, and checking puzzle failure or success.
-		startUI.SetActive (false);
-		eventSystem.SetActive(false);
+		toggleUI();
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", entryPoint.transform.position, 
@@ -78,6 +77,13 @@ public class GameLogic : MonoBehaviour {
 		CancelInvoke ("displayPattern");
 		InvokeRepeating("displayPattern", 3, puzzleSpeed); //Start running through the displaypattern function
 		currentSolveIndex = 0; //Set our puzzle index at 0
+//		iTween.MoveTo (player, 
+//			iTween.Hash (
+//				"position", playPoint.transform.position, 
+//				"time", 2, 
+//				"easetype", "linear"
+//			)
+//		);
 
 	}
 
@@ -131,7 +137,8 @@ public class GameLogic : MonoBehaviour {
 				"oncompletetarget", this.gameObject
 			)
 		);
-
+		player.transform.position = startPoint.transform.position;
+		toggleUI ();
 		restartUI.SetActive (false);
 	}
 	public void resetGame() {
@@ -148,7 +155,15 @@ public class GameLogic : MonoBehaviour {
 
 		startPuzzle ();
 
+				iTween.MoveTo (player, 
+					iTween.Hash (
+						"position", playPoint.transform.position, 
+						"time", 2, 
+						"easetype", "linear"
+					)
+				);
 	}
+		
 
 	public void puzzleSuccess() { //Do this when the player gets it right
 		iTween.MoveTo (player, 
@@ -166,7 +181,10 @@ public class GameLogic : MonoBehaviour {
 		//this.GetComponent<AudioSource>().Play(); //Play the success audio
 		restartUI.SetActive (true);
 		playerWon = true;
-
+	}
+	public void toggleUI() {
+		startUI.SetActive (!startUI.activeSelf);
+		restartUI.SetActive (!restartUI.activeSelf);
 	}
 
 }

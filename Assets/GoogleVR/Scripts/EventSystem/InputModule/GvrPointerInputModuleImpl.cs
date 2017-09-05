@@ -312,7 +312,6 @@ public class GvrPointerInputModuleImpl {
     if (CurrentEventData.pointerPress == pointerClickHandler && CurrentEventData.eligibleForClick) {
       EventExecutor.Execute(CurrentEventData.pointerPress, CurrentEventData, ExecuteEvents.pointerClickHandler);
     }
-	
 		if (CurrentEventData != null) {
 			if (CurrentEventData.pointerDrag != null && CurrentEventData.dragging) {
 				EventExecutor.ExecuteHierarchy (go, CurrentEventData, ExecuteEvents.dropHandler);
