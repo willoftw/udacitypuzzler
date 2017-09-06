@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
 
@@ -20,6 +21,8 @@ public class GameLogic : MonoBehaviour {
 
 	private int currentSolveIndex = 0; //Temporary variable for storing the index that the player is solving for in the pattern.
 	public GameObject failAudioHolder;
+	public GameObject FailText; 
+	public GameObject DoorCover;
 
 	// Use this for initialization
 	void Start () {
@@ -64,7 +67,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	public void startPuzzle() { //Begin the puzzle sequence
-		toggleUI();
+		hideAllUI();
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", entryPoint.transform.position, 
@@ -88,6 +91,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	public void onComplete() { //Reset the puzzle sequence
+		hideAllUI();
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", playPoint.transform.position, 
@@ -95,6 +99,7 @@ public class GameLogic : MonoBehaviour {
 				"easetype", "linear"
 			)
 		);
+		FailText.SetActive (false);
 	}
 
 	void displayPattern() { //Invoked repeating.
@@ -138,53 +143,70 @@ public class GameLogic : MonoBehaviour {
 			)
 		);
 		player.transform.position = startPoint.transform.position;
-		toggleUI ();
-		restartUI.SetActive (false);
+		resetGame();
 	}
+
+
 	public void resetGame() {
-		restartUI.SetActive (false);
-		startUI.SetActive (true);
+		hideAllUI();
+		showStartUI();
+		Debug.Log ("Resetting Game: " + DoorCover.transform.position.y);
+		iTween.MoveTo (DoorCover, 
+			iTween.Hash (
+				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y-4,DoorCover.transform.position.z), 
+				"time", 1, 
+				"easetype", "linear",
+				"oncomplete", "finishingFlourish"
+			)
+		);
 		playerWon = false;
 		generatePuzzleSequence (); //Generate the puzzle sequence for this playthrough.  
 	}
 
 	public void puzzleFailure() { //Do this when the player gets it wrong
 		Debug.Log("You've Failed, Resetting puzzle");
+		FailText.SetActive (true);
 		failAudioHolder.GetComponent<GvrAudioSource>().Play();
-		currentSolveIndex = 0;
-
 		startPuzzle ();
 
-				iTween.MoveTo (player, 
-					iTween.Hash (
-						"position", playPoint.transform.position, 
-						"time", 2, 
-						"easetype", "linear"
-					)
-				);
 	}
 		
 
 	public void puzzleSuccess() { //Do this when the player gets it right
+		showFinishUI();
+		iTween.MoveTo (DoorCover, 
+			iTween.Hash (
+				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y+4,DoorCover.transform.position.z), 
+				"time", 1, 
+				"easetype", "linear",
+				"oncomplete", "finishingFlourish"
+			)
+		);
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", restartPoint.transform.position, 
-				"time", 2, 
+				"time", 3, 
 				"easetype", "linear",
 				"oncomplete", "finishingFlourish", 
 				"oncompletetarget", this.gameObject
 			)
 		);
 	}
+		
 
-	public void finishingFlourish() { //A nice visual flourish when the player wins
-		//this.GetComponent<AudioSource>().Play(); //Play the success audio
-		restartUI.SetActive (true);
-		playerWon = true;
+	public void showStartUI() {
+		startUI.SetActive (true);
+		restartUI.SetActive (false);
 	}
-	public void toggleUI() {
-		startUI.SetActive (!startUI.activeSelf);
-		restartUI.SetActive (!restartUI.activeSelf);
+
+	public void hideAllUI() {
+		startUI.SetActive (false);
+		restartUI.SetActive (false);
+	}
+
+	public void showFinishUI() {
+		startUI.SetActive (false);
+		restartUI.SetActive (true);
 	}
 
 }
