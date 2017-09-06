@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
@@ -66,41 +67,20 @@ public class GameLogic : MonoBehaviour {
 
 
 
-	public void startPuzzle() { //Begin the puzzle sequence
+	public void startPuzzle() { //Begin the puzzle sequence (button press)
 		hideAllUI();
-		iTween.MoveTo (player, 
-			iTween.Hash (
-				"position", entryPoint.transform.position, 
-				"time", 2, 
-				"easetype", "linear",
-				"onComplete" ,"onComplete",
-				"oncompletetarget", GameObject.Find("GameLogic")
-			)
-		);
-		CancelInvoke ("displayPattern");
-		InvokeRepeating("displayPattern", 3, puzzleSpeed); //Start running through the displaypattern function
-		currentSolveIndex = 0; //Set our puzzle index at 0
-//		iTween.MoveTo (player, 
-//			iTween.Hash (
-//				"position", playPoint.transform.position, 
-//				"time", 2, 
-//				"easetype", "linear"
-//			)
-//		);
-
-	}
-
-	public void onComplete() { //Reset the puzzle sequence
-		hideAllUI();
-		iTween.MoveTo (player, 
-			iTween.Hash (
-				"position", playPoint.transform.position, 
-				"time", 2, 
-				"easetype", "linear"
-			)
-		);
 		FailText.SetActive (false);
+
+		Debug.Log ("starting puzzle");
+
+		Move(new List<Vector3> { entryPoint.transform.position, playPoint.transform.position});
+
+//		CancelInvoke ("displayPattern");
+//		InvokeRepeating("displayPattern", 1, puzzleSpeed); //Start running through the displaypattern function
+		currentSolveIndex = 0; //Set our puzzle index at 0
+
 	}
+		
 
 	void displayPattern() { //Invoked repeating.
 		currentlyDisplayingPattern = true; //Let us know were displaying the pattern
@@ -132,34 +112,27 @@ public class GameLogic : MonoBehaviour {
 	}
 
 
-	public void resetPuzzle() { //Reset the puzzle sequence
-		iTween.MoveTo (player, 
-			iTween.Hash (
-				"position", startPoint.transform.position, 
-				"time", 4, 
-				"easetype", "linear",
-				"oncomplete", "resetGame", 
-				"oncompletetarget", this.gameObject
-			)
-		);
-		player.transform.position = startPoint.transform.position;
-		resetGame();
+	public void resetPuzzle() { //Reset the puzzle sequence for on faliure
+		playerWon = false;
+		FailText.SetActive (false);
+		//player.transform.position = startPoint.transform.position;
+		//resetGame();
 	}
 
 
-	public void resetGame() {
+	public void resetGame() { // reset the entire game for on complete (button press)
+		Debug.Log ("Resetting Game: " + DoorCover.transform.position.y);
+		playerWon = false;
 		hideAllUI();
 		showStartUI();
-		Debug.Log ("Resetting Game: " + DoorCover.transform.position.y);
-		iTween.MoveTo (DoorCover, 
+		closeDoor ();
+		iTween.MoveTo (player, 
 			iTween.Hash (
-				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y-4,DoorCover.transform.position.z), 
+				"position", startPoint.transform.position, 
 				"time", 1, 
-				"easetype", "linear",
-				"oncomplete", "finishingFlourish"
+				"easetype", "linear"
 			)
 		);
-		playerWon = false;
 		generatePuzzleSequence (); //Generate the puzzle sequence for this playthrough.  
 	}
 
@@ -167,21 +140,13 @@ public class GameLogic : MonoBehaviour {
 		Debug.Log("You've Failed, Resetting puzzle");
 		FailText.SetActive (true);
 		failAudioHolder.GetComponent<GvrAudioSource>().Play();
-		startPuzzle ();
+		Move(new List<Vector3> { entryPoint.transform.position, playPoint.transform.position});
 
 	}
 		
-
 	public void puzzleSuccess() { //Do this when the player gets it right
 		showFinishUI();
-		iTween.MoveTo (DoorCover, 
-			iTween.Hash (
-				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y+4,DoorCover.transform.position.z), 
-				"time", 1, 
-				"easetype", "linear",
-				"oncomplete", "finishingFlourish"
-			)
-		);
+		openDoor();
 		iTween.MoveTo (player, 
 			iTween.Hash (
 				"position", restartPoint.transform.position, 
@@ -192,7 +157,6 @@ public class GameLogic : MonoBehaviour {
 			)
 		);
 	}
-		
 
 	public void showStartUI() {
 		startUI.SetActive (true);
@@ -207,6 +171,67 @@ public class GameLogic : MonoBehaviour {
 	public void showFinishUI() {
 		startUI.SetActive (false);
 		restartUI.SetActive (true);
+	}
+
+	void openDoor()
+	{
+		iTween.MoveTo (DoorCover, 
+			iTween.Hash (
+				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y+4,DoorCover.transform.position.z), 
+				"time", 1, 
+				"easetype", "linear",
+				"oncomplete", "finishingFlourish"
+			)
+		);
+	}
+
+	void closeDoor()
+	{
+		iTween.MoveTo (DoorCover, 
+			iTween.Hash (
+				"position", new Vector3(DoorCover.transform.position.x,DoorCover.transform.position.y-4,DoorCover.transform.position.z), 
+				"time", 1, 
+				"easetype", "linear",
+				"oncomplete", "finishingFlourish"
+			)
+		);
+	}
+
+	public float speed = 5f;
+
+	public void Move(List<Vector3> destinations) {
+		var executeOnMoveFinishes = new List<System.Action>();
+
+		for (var i = 0; i < destinations.Count; i++) {
+			var a = i;
+			executeOnMoveFinishes.Add(() => {
+				var moveParams = iTween.Hash("easetype", "linear", "speed", speed, "position", destinations[a],
+					"oncomplete", "moveComplete", "oncompletetarget", this.gameObject, "oncompleteparams", executeOnMoveFinishes);
+				iTween.MoveTo(player, moveParams);
+			});
+		}
+
+		moveComplete(executeOnMoveFinishes);
+	}
+
+	void moveComplete(List<System.Action> actions) {
+		if (actions.Count == 0) {
+			FailText.SetActive (false);
+
+			//displayPattern();
+			playerWon = false;
+			CancelInvoke ("displayPattern");
+			InvokeRepeating("displayPattern", 1, puzzleSpeed); //Start running through the displaypattern function
+			currentSolveIndex = 0; //Set our puzzle index at 0
+
+			//pattern replayed but orbs no longer clickable? 
+
+		}
+		if (actions.Count > 0) {
+			actions[0]();
+			actions.RemoveAt(0);
+		}
+
 	}
 
 }
